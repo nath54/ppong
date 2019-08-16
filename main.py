@@ -241,6 +241,7 @@ def main():
     txp,typ=rx(180),ry(65)
     vitxp,vityp=random.choice([rxx(-3),rxx(3)]),random.choice([ryy(-3),ryy(3)])
     pr=pygame.Rect(pxp,pyp,txp,typ)
+    val=10
     dbgp=time.time()
     tbgp=0.01
     p1b,p2b=False,False
@@ -252,9 +253,14 @@ def main():
         if time.time()-dbgp >= tbgp:
             dbgp=time.time()
             pr=pygame.Rect(pxp,pyp,txp,typ)
+            prhaut=pygame.Rect(pxp+rx(val),pyp,txp-rx(val*2),ry(val))
+            prbas=pygame.Rect(pxp+rx(val),pyp+typ-ry(val),txp-rx(val*2),ry(val))
+            prgauche=pygame.Rect(pxp,pyp+ry(val),rx(val),pyp-ry(val*2))
+            prdroite=pygame.Rect(pxp+txp-rx(val),pyp+ry(val),rx(val),typ-ry(val*2))
             if pr.colliderect(b1x) or pr.colliderect(b2x): vitxp=-vitxp
             if pr.colliderect(b1y) or pr.colliderect(b2y): vityp=-vityp
-            if pr.colliderect(b1r) or pr.colliderect(b2r) or pr.colliderect(b3r) or pr.colliderect(b4r): vitxp,vityp=vitxp,-vityp 
+            if prhaut.colliderect(b1r) or prhaut.colliderect(b2r) or prhaut.colliderect(b3r) or prhaut.colliderect(b4r) or prbas.colliderect(b1r) or prbas.colliderect(b2r) or prbas.colliderect(b3r) or prbas.colliderect(b4r): vityp=-vityp
+            if prgauche.colliderect(b1r) or prgauche.colliderect(b2r) or prgauche.colliderect(b3r) or prgauche.colliderect(b4r) or prdroite.colliderect(b1r) or prdroite.colliderect(b2r) or prdroite.colliderect(b3r) or prdroite.colliderect(b4r): vitxp=-vitxp
             pxp+=vitxp
             pyp+=vityp
         #aff
@@ -275,6 +281,9 @@ def main():
         pygame.draw.rect(fenetre,cl1,b2r,0)
         pygame.draw.rect(fenetre,cl2,b2r,rx(2))
         fenetre.blit( font.render(txt,True,cl2) , [rx(160),ry(210)])
+        fenetre.blit( font.render("haut : e",True,(255,255,255)) , [rx(150),ry(300)])
+        fenetre.blit( font.render("bas : d",True,(255,255,255)) , [rx(150),ry(340)])
+        fenetre.blit( font.render("tir : espace",True,(255,255,255)) , [rx(150),ry(380)])
         #b3
         if b3r.collidepoint(pos): cl1,cl2=(255,255,255),(0,0,0)
         else: cl1,cl2=(0,0,0),(255,255,255)
@@ -283,6 +292,9 @@ def main():
         pygame.draw.rect(fenetre,cl1,b3r,0)
         pygame.draw.rect(fenetre,cl2,b3r,rx(2))
         fenetre.blit( font.render(txt,True,cl2) , [rx(710),ry(210)])
+        fenetre.blit( font.render("haut : fleche haut",True,(255,255,255)) , [rx(700),ry(300)])
+        fenetre.blit( font.render("bas : fleche bas",True,(255,255,255)) , [rx(700),ry(340)])
+        fenetre.blit( font.render("tir : NUM0",True,(255,255,255)) , [rx(700),ry(380)])
         #b4
         if b4r.collidepoint(pos): cl1,cl2=(255,255,255),(0,0,0)
         else: cl1,cl2=(0,0,0),(255,255,255)
