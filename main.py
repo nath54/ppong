@@ -18,6 +18,7 @@ def ryy(y): return float(y/btey*tey)
 
 font=pygame.font.SysFont("Arial",rx(20))
 font2=pygame.font.SysFont("Arial",rx(30))
+font3=pygame.font.SysFont("Arial",rx(40))
 
 b1x=pygame.Rect(-10,-10,10,tey+20)
 b2x=pygame.Rect(tex,-10,10,tey+20)
@@ -230,8 +231,30 @@ def main_j(b1b,b2b):
             elif event.type==KEYDOWN:
                 if event.key==K_SPACE: fini=False
 
-
-main_j(True,True)
+def main():
+    b1r=pygame.Rect(rx(400),ry(500),rx(200),ry(100))
+    p1b,p2b=False,False
+    encour=True
+    while encour:
+        pos=pygame.mouse.get_pos()
+        #aff
+        fenetre.fill((0,0,0))
+         #b1
+        if b1r.collidepoint(pos): cl1,cl2=(255,255,255),(0,0,0)
+        else: cl1,cl2=(0,0,0),(255,255,255)
+        pygame.draw.rect(fenetre,cl1,b1r,0)
+        pygame.draw.rect(fenetre,cl2,b1r,rx(2))
+        fenetre.blit( font3.render("Jouer",True,cl2) , [rx(430),ry(520)])
+        pygame.display.update()
+        #events
+        for event in pygame.event.get():
+            if event.type==QUIT: exit()
+            elif event.type==KEYDOWN and event.key==K_ESCAPE: encour=False
+            elif event.type==MOUSEBUTTONUP:
+                if b1r.collidepoint(pos): main_j(p1b,p2b)
+                
+main()
+                
 
 
 
