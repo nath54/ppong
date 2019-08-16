@@ -236,22 +236,38 @@ def main():
     b1r=pygame.Rect(rx(400),ry(500),rx(200),ry(100))
     b2r=pygame.Rect(rx(150),ry(200),rx(100),ry(50))
     b3r=pygame.Rect(rx(700),ry(200),rx(100),ry(50))
-    b4r=pygame.Rect(rx(500),ry(650),rx(100),ry(50))
+    b4r=pygame.Rect(rx(450),ry(650),rx(100),ry(50))
+    pxp,pyp=rx(450),ry(50)
+    txp,typ=rx(180),ry(65)
+    vitxp,vityp=random.choice([rxx(-3),rxx(3)]),random.choice([ryy(-3),ryy(3)])
+    pr=pygame.Rect(pxp,pyp,txp,typ)
+    dbgp=time.time()
+    tbgp=0.01
     p1b,p2b=False,False
     encour=True
     while encour:
+        #pos
         pos=pygame.mouse.get_pos()
+        #animation
+        if time.time()-dbgp >= tbgp:
+            dbgp=time.time()
+            pr=pygame.Rect(pxp,pyp,txp,typ)
+            if pr.colliderect(b1x) or pr.colliderect(b2x): vitxp=-vitxp
+            if pr.colliderect(b1y) or pr.colliderect(b2y): vityp=-vityp
+            if pr.colliderect(b1r) or pr.colliderect(b2r) or pr.colliderect(b3r) or pr.colliderect(b4r): vitxp,vityp=vitxp,-vityp 
+            pxp+=vitxp
+            pyp+=vityp
         #aff
         fenetre.fill((10,10,10))
         pygame.draw.rect(fenetre,(255,255,255),(tex/2-rx(5),0,rx(10),tey),0)
-        fenetre.blit( font4.render("Ppong",True,(150,150,150)) , [rx(450),ry(50)])
-         #b1
+        fenetre.blit( font4.render("Ppong",True,(150,150,150)) , [pxp,pyp])
+        #b1
         if b1r.collidepoint(pos): cl1,cl2=(255,255,255),(0,0,0)
         else: cl1,cl2=(0,0,0),(255,255,255)
         pygame.draw.rect(fenetre,cl1,b1r,0)
         pygame.draw.rect(fenetre,cl2,b1r,rx(2))
         fenetre.blit( font3.render("Jouer",True,cl2) , [rx(430),ry(520)])
-         #b2
+        #b2
         if b2r.collidepoint(pos): cl1,cl2=(255,255,255),(0,0,0)
         else: cl1,cl2=(0,0,0),(255,255,255)
         if p1b: txt="bot"
@@ -259,7 +275,7 @@ def main():
         pygame.draw.rect(fenetre,cl1,b2r,0)
         pygame.draw.rect(fenetre,cl2,b2r,rx(2))
         fenetre.blit( font.render(txt,True,cl2) , [rx(160),ry(210)])
-         #b3
+        #b3
         if b3r.collidepoint(pos): cl1,cl2=(255,255,255),(0,0,0)
         else: cl1,cl2=(0,0,0),(255,255,255)
         if p2b: txt="bot"
@@ -267,12 +283,12 @@ def main():
         pygame.draw.rect(fenetre,cl1,b3r,0)
         pygame.draw.rect(fenetre,cl2,b3r,rx(2))
         fenetre.blit( font.render(txt,True,cl2) , [rx(710),ry(210)])
-         #b4
+        #b4
         if b4r.collidepoint(pos): cl1,cl2=(255,255,255),(0,0,0)
         else: cl1,cl2=(0,0,0),(255,255,255)
         pygame.draw.rect(fenetre,cl1,b4r,0)
         pygame.draw.rect(fenetre,cl2,b4r,rx(2))
-        fenetre.blit( font.render("exit",True,cl2) , [rx(510),ry(660)])
+        fenetre.blit( font.render("quitter",True,cl2) , [rx(460),ry(660)])
         #update
         pygame.display.update()
         #events
