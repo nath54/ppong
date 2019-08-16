@@ -68,7 +68,7 @@ class Baton:
         self.tx=rxx(10)
         self.ty=ryy(100)
         if p==1: self.px=rxx(50)
-        else: self.px=rxx(tex-50-self.tx)
+        else: self.px=tex-rxx(50)-self.tx
         self.py=ryy(tey/2-self.ty/2)
         self.rect=pygame.Rect(self.px,self.py,self.tx,self.ty)
         self.vie_tot=100
