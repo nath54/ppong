@@ -117,15 +117,14 @@ class Baton:
             if self.py > tey-self.ty: self.py,self.vity=tey-self.ty,0
             self.rect=pygame.Rect(self.px,self.py,self.tx,self.ty)
 
-v=6
-vv=4
 class Ball:
-    def __init__(self):
+    def __init__(self,vitbal):
+        self.v=vitbal
         self.px=tex/2
         self.py=tey/2
         self.t=rxx(5)
-        self.vitx=random.choice([rxx(-v),rxx(v)])
-        self.vity=random.choice([rxx(-vv),rxx(vv)])
+        self.vitx=random.choice([rxx(-vitbal),rxx(vitbal)])
+        self.vity=random.choice([rxx(-vitbal),rxx(vitbal)])
         self.dbg=time.time()
         self.tbg=0.01
         self.tppbg=3
@@ -150,9 +149,9 @@ class Ball:
                 self.py+=self.vity
                 for x in range(10): clf=chcl(clf)
             if self.rect.colliderect(b1x):
-                self.px,self.py,bts[1].points,self.vity,self.vitx,self.dppbg,self.tppbg=tex/2,tey/2,bts[1].points+1,random.choice([rxx(-vv),rxx(vv)]),-self.vitx,time.time(),1
+                self.px,self.py,bts[1].points,self.vity,self.vitx,self.dppbg,self.tppbg=tex/2,tey/2,bts[1].points+1,random.choice([rxx(-self.v),rxx(self.v)]),-self.vitx,time.time(),1
             if self.rect.colliderect(b2x):
-                self.px,self.py,bts[0].points,self.vity,self.vitx,self.dppbg,self.tppbg=tex/2,tey/2,bts[0].points+1,random.choice([rxx(-vv),rxx(vv)]),-self.vitx,time.time(),1
+                self.px,self.py,bts[0].points,self.vity,self.vitx,self.dppbg,self.tppbg=tex/2,tey/2,bts[0].points+1,random.choice([rxx(-self.v),rxx(self.v)]),-self.vitx,time.time(),1
         return clf
 
 def aff_j(bts,ball,pause,fps,clf,projs):
@@ -185,13 +184,13 @@ def verif_keys(bt1,bt2,ball,projs):
         if bt2.py+bt2.ty/2 >= bt1.py-bt1.ty and  bt2.py+bt2.ty/2 <= bt1.py+bt1.ty/2: projs=bt1.bouger("Tir",projs)
     return bt1,bt2,projs
 
-def main_j(b1b,b2b):
-    ppg=20
+def main_j(b1b,b2b,vitbal,scpg):
+    ppg=scpg
     clf=(0,0,0)
     bt1=Baton(1,b1b)
     bt2=Baton(2,b2b)
     bts=[bt1,bt2]
-    ball=Ball()
+    ball=Ball(vitbal)
     projs=[]
     fps=0
     fini=False
@@ -237,11 +236,19 @@ def main():
     b2r=pygame.Rect(rx(150),ry(200),rx(100),ry(50))
     b3r=pygame.Rect(rx(700),ry(200),rx(100),ry(50))
     b4r=pygame.Rect(rx(450),ry(650),rx(100),ry(50))
+    b5r=pygame.Rect(rx(700),ry(650),rx(200),ry(60))
+    b6r=pygame.Rect(rx(100),ry(650),rx(200),ry(60))
     pxp,pyp=rx(450),ry(50)
     txp,typ=rx(180),ry(65)
     vitxp,vityp=random.choice([rxx(-3),rxx(3)]),random.choice([ryy(-3),ryy(3)])
     pr=pygame.Rect(pxp,pyp,txp,typ)
     val=10
+    vb=3
+    mnvb=1
+    mxvb=10
+    scpg=10
+    mnscpg=1
+    mxscpg=50
     dbgp=time.time()
     tbgp=0.01
     p1b,p2b=False,False
@@ -264,7 +271,7 @@ def main():
             pxp+=vitxp
             pyp+=vityp
         #aff
-        fenetre.fill((10,10,10))
+        fenetre.fill((0,0,0))
         pygame.draw.rect(fenetre,(255,255,255),(tex/2-rx(5),0,rx(10),tey),0)
         fenetre.blit( font4.render("Ppong",True,(150,150,150)) , [pxp,pyp])
         #b1
@@ -301,6 +308,22 @@ def main():
         pygame.draw.rect(fenetre,cl1,b4r,0)
         pygame.draw.rect(fenetre,cl2,b4r,rx(2))
         fenetre.blit( font.render("quitter",True,cl2) , [rx(460),ry(660)])
+        #b5
+        if b5r.collidepoint(pos): cl1,cl2=(255,255,255),(0,0,0)
+        else: cl1,cl2=(0,0,0),(255,255,255)
+        pygame.draw.rect(fenetre,cl1,b5r,0)
+        pygame.draw.rect(fenetre,cl2,(rx(700),ry(680),rx(200),ry(5)),0)
+        pp=int(vb/(mxvb-mnvb)*rx(200))
+        pygame.draw.rect(fenetre,cl2,(rx(700)+pp,ry(650),rx(2),ry(60)),0)
+        fenetre.blit( font.render("vitesse de la balle : "+str(vb),True,(255,255,255)) , [rx(650),ry(740)])
+        #b6
+        if b6r.collidepoint(pos): cl1,cl2=(255,255,255),(0,0,0)
+        else: cl1,cl2=(0,0,0),(255,255,255)
+        pygame.draw.rect(fenetre,cl1,b6r,0)
+        pygame.draw.rect(fenetre,cl2,(rx(100),ry(680),rx(200),ry(5)),0)
+        pp=int(scpg/(mxscpg-mnscpg)*rx(200))
+        pygame.draw.rect(fenetre,cl2,(rx(100)+pp,ry(650),rx(2),ry(60)),0)
+        fenetre.blit( font.render("score pour gagner : "+str(scpg),True,(255,255,255)) , [rx(50),ry(740)])
         #update
         pygame.display.update()
         #events
@@ -308,10 +331,13 @@ def main():
             if event.type==QUIT: exit()
             elif event.type==KEYDOWN and event.key==K_ESCAPE: encour=False
             elif event.type==MOUSEBUTTONUP:
-                if b1r.collidepoint(pos): main_j(p1b,p2b)
+                if b1r.collidepoint(pos): main_j(p1b,p2b,vb,scpg)
                 elif b2r.collidepoint(pos): p1b=not p1b
                 elif b3r.collidepoint(pos): p2b=not p2b
                 elif b4r.collidepoint(pos): exit()
+                elif b5r.collidepoint(pos): vb=int((pos[0]-rx(700))/rx(200)*(mxvb-mnvb))
+                elif b6r.collidepoint(pos): scpg=int((pos[0]-rx(100))/rx(200)*(mxscpg-mnscpg))
+                    
                 
 main()
                 
